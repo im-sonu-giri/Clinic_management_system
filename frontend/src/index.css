@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
+
+*{
+  font-family: Outfit;;
+}
+
 .logo {
   width: 110px;
   height: auto;
@@ -34,6 +40,9 @@
 
 .btn-primary:hover {
   background-color: #2e7d32;
+}
+.bg-light-dark {
+  background-color: #c8e6c9;
 }
 
 /* Optional accent */
