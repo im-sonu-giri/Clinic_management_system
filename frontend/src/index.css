@@ -49,3 +49,8 @@
 .bg-light{
   background-color: #f9fff9
 }
+
+::-webkit-scrollbar {
+  @apply hidden 
+
+}
