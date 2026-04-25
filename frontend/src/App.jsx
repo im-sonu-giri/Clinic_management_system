@@ -3,15 +3,17 @@ import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Contact from './pages/Contact'
 import MyProfile from './pages/MyProfile'
-import Login from './pages/Login'
 import MyAppointments from './pages/MyAppointments'
 import Doctors from './pages/Doctors'
 import About from './pages/About'
 import Appointment from './pages/Appointment'
+import Navabar from './components/Navabar'
+import Login from './pages/Login'
 
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[10%]'>
+      <Navabar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
