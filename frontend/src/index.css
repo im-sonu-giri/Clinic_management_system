@@ -63,3 +63,10 @@
   @apply hidden 
 
 }
+
+@media (max-width:740px){
+  .active p{
+    background-color: #388e3c;
+    color: white;
+  }
+}
