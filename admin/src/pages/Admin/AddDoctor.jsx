@@ -75,7 +75,7 @@ const AddDoctor = () => {
   return (
     <div className="w-full flex justify-center px-4 sm:px-6 lg:px-8">
       <form onSubmit={onSubmitHandler}
-        className="w-full max-w-5xl p-8 bg-white rounded-2xl shadow-md border m-5">
+        className="w-full max-w-5xl p-8 bg-white rounded-2xl shadow-md border m-5 overflow-y-scroll">
 
         {/* Heading */}
         <p className="text-xl font-semibold text-gray-800 mb-3">
