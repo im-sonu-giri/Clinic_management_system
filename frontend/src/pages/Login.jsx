@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
+import { useContext } from 'react'
+import { AppContext } from '../context/AppContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 
 const Login = () => {
+  const {backendUrl, token, setToken} = useContext(AppContext)
+  const navigate = useNavigate()
   const [state, setState] = useState('Sign Up')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -8,10 +17,45 @@ const Login = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault()
+    try {
+      if(state === 'Sign Up'){
+        const {data} = await axios.post(backendUrl + 'api/user/register', {name, password, email} )
+        if(data.success){
+          localStorage.setItem('token', data.token)
+          setToken(data.token)
+
+        }else{
+          toast.error(data.message)
+        }
+
+      }else{
+         const {data} = await axios.post(backendUrl + 'api/user/login', { password, email} )
+        if(data.success){
+          localStorage.setItem('token', data.token)
+          setToken(data.token)
+            }else{
+          toast.error(data.message)
+        }
+
+      }
+      
+    } catch (error) {
+      toast.error(error.message)
+      
+    }
+
   }
+  useEffect(()=>{
+    if(token){
+      navigate('/')
+
+    }
+  },[token])
 
   return (
-    <form className='min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4'>
+    <form 
+    onSubmit={onSubmitHandler}
+    className='min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4'>
 
       <div className='flex flex-col gap-4 m-auto items-start p-10 w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-2xl'>
 
@@ -69,7 +113,9 @@ const Login = () => {
         </div>
 
         {/* Button */}
-        <button className='bg-primary hover:opacity-90 active:scale-[0.99] transition-all text-white w-full py-3 rounded-lg text-base font-medium shadow-md'>
+        <button 
+        type='submit'
+        className='bg-primary hover:opacity-90 active:scale-[0.99] transition-all text-white w-full py-3 rounded-lg text-base font-medium shadow-md'>
           {state === 'Sign Up' ? 'Create account' : 'Login'}
         </button>
 

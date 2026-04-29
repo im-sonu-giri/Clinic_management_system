@@ -57,4 +57,78 @@ const registerUser = async (req, res) => {
     }
 }
 
-export { registerUser }
+// Api for user login
+
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        const user = await userModel.findOne({ email })
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'User does not exist' })
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if (isMatch) {
+
+            const token = jwt.sign(
+                { id: user._id },
+                process.env.JWT_SECRET,
+                { expiresIn: '7d' }
+            )
+
+            return res.json({ success: true, token })
+
+        } else {
+            return res.status(400).json({ success: false, message: "Invalid Credentials" })
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+// API to get users profile data
+
+const getProfile = async (req, res) => {
+    try {
+        const { userId } = req.body
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID missing"
+            })
+        }
+
+        const userData = await userModel.findById(userId).select('-password')
+
+        if (!userData) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        res.json({
+            success: true,
+            userData
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+
+}
+
+
+export { registerUser, loginUser, getProfile }
