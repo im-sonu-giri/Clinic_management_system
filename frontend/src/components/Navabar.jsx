@@ -7,7 +7,7 @@ import { AppContext } from '../context/AppContext'
 const Navabar = () => {
 
     const navigate = useNavigate()
-    const {token, setToken} = useContext(AppContext)
+    const {token, setToken, userData} = useContext(AppContext)
     const [showMenu, setShowMenu] = useState(false);
     // const [token, setToken] = useState(true);
 
@@ -48,12 +48,12 @@ const Navabar = () => {
 
             <div className="flex items-center gap-4">
 
-                {token ? (
+                {token && userData ? (
                     <div className='flex items-center gap-2 cursor-pointer group relative'>
 
-                        <img
+                         <img
                             className='w-9 h-9 rounded-full object-cover border border-gray-200'
-                            src={assets.profile_pic}
+                            src={userData.image}
                             alt=""
                         />
 
