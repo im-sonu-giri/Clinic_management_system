@@ -210,8 +210,8 @@ const bookAppointment = async (req, res) => {
         await newAppointment.save()
 
         // save new slots data in docData
-        await doctorModel.findByIdAndUpdate|(docId,{slots_booked})
-        res.json({success:true, message:'Appointment Book'})
+        await doctorModel.findByIdAndUpdate | (docId, { slots_booked })
+        res.json({ success: true, message: 'Appointment Book' })
 
 
     } catch (error) {
@@ -226,13 +226,13 @@ const bookAppointment = async (req, res) => {
 
 //api to get user appointmen for frontend my_appointment page
 
-const listAppointment  = async(req, res)=>{
+const listAppointment = async (req, res) => {
     try {
         const [userId] = req.body
-        const appointments = await appointmentModel.find({userId})
-        res.json({success:true, appointments})
+        const appointments = await appointmentModel.find({ userId })
+        res.json({ success: true, appointments })
 
-        
+
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -242,33 +242,67 @@ const listAppointment  = async(req, res)=>{
     }
 }
 // api to cancel appointment
-const cancelAppointment = async(req,res) =>{
+const cancelAppointment = async (req, res) => {
     try {
-        const {userId, appointmentId} = req.body
+        const { userId, appointmentId } = req.body
         const appointmentData = await appointmentModel.findById(appointmentId)
         // verify appointment user
-        if(appointmentData.userId !== userId){
-            return res.json({success:false, message: "unauthorized action"})
+        if (appointmentData.userId !== userId) {
+            return res.json({ success: false, message: "unauthorized action" })
         }
-        await appointmentModel.findByIdAndUpdate(appointmentId, {cancelled: true})
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
 
         // releasing doctor slots
-        const {docId, slotDate, slotTime} = appointmentData
+        const { docId, slotDate, slotTime } = appointmentData
         const doctorData = await doctorModel.findById(docId)
         let slots_booked = doctorData.slots_booked
-        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e!== slotTime)
-        await doctorModel.findByIdAndUpdate(docId, {slots_booked})
-        res.json({success:true, message:'Appointment cancelled'})
-        
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+        await doctorModel.findByIdAndUpdate(docId, { slots_booked })
+        res.json({ success: true, message: 'Appointment cancelled' })
+
     } catch (error) {
         console.log(error)
         res.status(500).json({
             success: false,
             message: error.message
         })
-        
+
     }
+}
+const khaltiInstance = new khalti({
+    key_id: process.env.KHALTI_KEY_ID,
+    key_secret: process.env.KHALTI_KEY_SECRET
+})
+// API to make payment of appointment 
+const paymentKhaltipay = async (req, res) => {
+    try {
+
+
+        const { appointmentId } = req.body
+
+        const appointmentData = await appointmentModel.findById(appointmentId)
+        if (!appointmentData || appointmentData.cancelled) {
+            return res.json({ success: false, message: "Appointment cancelled or not found" })
+        }
+        // creating options for khalti payment
+        const options = {
+            amount: appointmentData.amount,
+            currency: process.env.CURRENCY,
+            receipt: appointmentId,
+        }
+        //creation of an order
+        const order = await khaltiInstance.orders.create(options)
+        res.json({ success: true, order })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+
+    }
+
 }
 
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment}
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, paymentKhaltipay }
