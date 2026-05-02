@@ -8,7 +8,7 @@ const AdminContextProvider = (props) => {
 
     // keep token from localStorage (persistent login)
     const [aToken, setAToken] = useState(
-        localStorage.getItem('aToken') || ""
+        localStorage.getItem('aToken') ?  localStorage.getItem('aToken'): ""
     );
     const [doctors, setDoctors] = useState([])
     const [appointments, setAppointments] = useState([])
