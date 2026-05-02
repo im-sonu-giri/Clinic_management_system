@@ -301,5 +301,28 @@ const appointmentsAdmin = async(req, res)=>{
         
     }
 }
+// Api to cancle appointment
+const appointmentCancel= async (req, res) => {
+    try {
+        const { appointmentId } = req.body
 
-export { addDoctor, loginAdmin, allDoctors , appointmentsAdmin};
+        const appointment = await appointmentModel.findById(appointmentId)
+
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
+
+        const doctor = await doctorModel.findById(appointment.docId)
+
+        let slots = doctor.slots_booked
+        slots[appointment.slotDate] =
+            slots[appointment.slotDate].filter(t => t !== appointment.slotTime)
+
+        await doctorModel.findByIdAndUpdate(appointment.docId, { slots_booked: slots })
+
+        res.json({ success: true, message: "Appointment cancelled" })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: error.message })
+    }
+}
+export { addDoctor, loginAdmin, allDoctors , appointmentsAdmin, appointmentCancel};
