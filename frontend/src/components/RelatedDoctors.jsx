@@ -4,21 +4,21 @@ import { AppContext } from '../context/AppContext'
 import { useEffect, useState } from 'react'
 
 const RelatedDoctors = ({ docId, speciality }) => {
-    const {doctors } = useContext(AppContext)
-    const[relDoc, setRelDoc] = useState([])
+    const { doctors } = useContext(AppContext)
+    const [relDoc, setRelDoc] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
         if (doctors.length > 0 && speciality) {
             // get all realted doctors with same speciality and excluding the current doctor
-            const doctorsData = doctors.filter((doc)=> doc.speciality === speciality[0] && doc._id !== docId)
+            const doctorsData = doctors.filter((doc) => doc.speciality === speciality[0] && doc._id !== docId)
             setRelDoc(doctorsData)
         }
 
-    }, [docId, speciality,doctors])
-    
-  return (
-     <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
+    }, [docId, speciality, doctors])
+
+    return (
+        <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
             <h1 className='text-3xl font-medium'>Related Doctors</h1>
             <p className='sm:w-1/3 text-center text-sm'>
                 simply browse through our extensive list of trusted doctors.
@@ -29,7 +29,7 @@ const RelatedDoctors = ({ docId, speciality }) => {
                 {relDoc.slice(0, 5).map((item, index) => (
                     <div
                         key={index}
-                        onClick={() => {navigate(`/appointment/${item._id}`); scrollTo(0,0)}}
+                        onClick={() => { navigate(`/appointment/${item._id}`); scrollTo(0, 0) }}
                         className="border border-green-200 rounded-xl overflow-hidden cursor-pointer transform hover:-translate-y-2 transition-all duration-500"
                     >
 
@@ -40,9 +40,9 @@ const RelatedDoctors = ({ docId, speciality }) => {
                         />
 
                         <div className='p-4'>
-                             <div className={`flex items-center gap-2 text-sm text-center ${item.available ? 'text-green-500': 'text-gray-500'} `}>
-                                <p className= {`w-2 h-2 ${item.available? 'bg-green-500' : 'bg-gray-500'} rounded-full`}></p>
-                                <p>{item.available ? 'Available': 'Not Available'}</p>
+                            <div className={`flex items-center gap-2 text-sm text-center ${item.available ? 'text-green-500' : 'text-gray-500'} `}>
+                                <p className={`w-2 h-2 ${item.available ? 'bg-green-500' : 'bg-gray-500'} rounded-full`}></p>
+                                <p>{item.available ? 'Available' : 'Not Available'}</p>
                             </div>
 
                             <p className='text-gray-900 text-lg font-medium'>{item.name}</p>
@@ -54,14 +54,14 @@ const RelatedDoctors = ({ docId, speciality }) => {
 
             </div>
 
-            <button 
-            onClick={()=>{ navigate('/doctors'); scrollTo(0,0)}}
-            className='bg-green-200 text-gray-600 px-12 py-3 rounded-full mt-10'>
+            <button
+                onClick={() => { navigate('/doctors'); scrollTo(0, 0) }}
+                className='bg-green-200 text-gray-600 px-12 py-3 rounded-full mt-10'>
                 More
             </button>
 
         </div>
-  )
+    )
 }
 
 export default RelatedDoctors
