@@ -78,9 +78,10 @@ const loginDoctor = async(req, res) =>{
 }
 // API to get all the Appointments of specific doctor
 
-const appointmentsDoctor = async(res, req)=>{
+const appointmentsDoctor = async(req, res)=>{
     try {
-        const {docId} = req.body
+        // Use docId from req (for GET requests) or req.body (for POST requests)
+        const docId = req.docId || req.body.docId
         const appointments = await appointmentModel.find({docId})
         res.json({success:true, appointments})
         
@@ -99,8 +100,7 @@ const appointmentComplete = async(req, res)=>{
         const {docId, appointmentId} = req.body
         const appointmentData = await appointmentModel.findById(appointmentId)
         if (appointmentData && appointmentData.docId === docId) {
-            await appointmentModel.findByI
-            dAndUpdate(appointmentId,{isCompleted:true})
+            await appointmentModel.findByIdAndUpdate(appointmentId,{isCompleted:true})
             return res.json({success:true, message:'appointment completed'})
             
         } else {
@@ -124,8 +124,7 @@ const appointmentCancel = async(req, res)=>{
         const {docId, appointmentId} = req.body
         const appointmentData = await appointmentModel.findById(appointmentId)
         if (appointmentData && appointmentData.docId === docId) {
-            await appointmentModel.findByI
-            dAndUpdate(appointmentId,{cancelled: true})
+            await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled: true})
             return res.json({success:true, message:'appointment cancelled'})
             
         } else {
@@ -145,35 +144,29 @@ const appointmentCancel = async(req, res)=>{
 }
 // Api to get dashboard data for doctor list
 const doctorDashboard = async(req, res)=>{
-    const {docId} = req.body
-    const appointments = await appointmentModel.find({docId})
-    let earnings =0
-    appointments.map((item)=>{
-        if (item.isCompleted || item.payment) {
-            
-            earnings += DataTransferItemList.amount
-        } else {
-            
-        }
-
-    })
-    let patients = []
-    appointments.map((item) =>{
-        if (!patients.includes(item.userId)) {
-            patients.push(item.userId)
-
-            
-        } 
-    })
-    const dashData ={
-        earnings,
-        appointments: appointments.length,
-        patients: patients.length,
-        latestAppointments: appointments.reverse().slice(0,5)
-    }
-    res.json({success:true, dashData})
-
     try {
+        // Use docId from req (for GET requests) or req.body (for POST requests)
+        const docId = req.docId || req.body.docId
+        const appointments = await appointmentModel.find({docId})
+        let earnings = 0
+        appointments.map((item)=>{
+            if (item.isCompleted || item.payment) {
+                earnings += item.amount
+            }
+        })
+        let patients = []
+        appointments.map((item) =>{
+            if (!patients.includes(item.userId)) {
+                patients.push(item.userId)
+            } 
+        })
+        const dashData ={
+            earnings,
+            appointments: appointments.length,
+            patients: patients.length,
+            latestAppointments: [...appointments].reverse().slice(0,5)
+        }
+        res.json({success:true, dashData})
         
     } catch (error) {
           console.log(error)
@@ -188,7 +181,8 @@ const doctorDashboard = async(req, res)=>{
 // API to get doctor profile for doctor profile
 const doctorProfile = async(req, res) =>{
     try {
-        const {docId} = req.body
+        // Use docId from req (for GET requests) or req.body (for POST requests)
+        const docId = req.docId || req.body.docId
         const profileData = await doctorModel.findById(docId).select('-password')
         res.json({success:true, profileData})
         

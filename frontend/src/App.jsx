@@ -11,7 +11,7 @@ import Navabar from './components/Navabar'
 import Login from './pages/Login'
 import Footer from './components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactTostify.css'
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
