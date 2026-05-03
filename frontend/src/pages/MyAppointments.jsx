@@ -430,7 +430,7 @@ const MyAppointments = () => {
               {/* Actions */}
               <div className="flex flex-col gap-2 justify-center">
 
-                {!item.cancelled && !item.payment && (
+                {!item.cancelled && !item.payment && !item.isCompleted && (
                   <button
                     onClick={() => appointmentKhaltipay(item._id)}
                     className="px-4 py-2 text-sm border rounded-md hover:bg-green-600 hover:text-white transition"
@@ -439,7 +439,7 @@ const MyAppointments = () => {
                   </button>
                 )}
 
-                {!item.cancelled && !item.payment && (
+                {!item.cancelled && !item.payment && !item.isCompleted && (
                   <button
                     onClick={() => cancelAppointment(item._id)}
                     className="px-4 py-2 text-sm border rounded-md hover:bg-red-600 hover:text-white transition"
@@ -448,17 +448,18 @@ const MyAppointments = () => {
                   </button>
                 )}
 
-                {item.cancelled && (
+                {item.cancelled && !item.isCompleted &&(
                   <span className="px-4 py-2 text-sm border border-red-500 text-red-500 rounded-md text-center">
                     Cancelled
                   </span>
                 )}
 
-                {item.payment && (
+                {item.payment && !item.isCompleted &&(
                   <span className="px-4 py-2 text-sm border border-green-500 text-green-600 rounded-md text-center">
                     Paid
                   </span>
                 )}
+                {item.isCompleted && <button className='sm:min-w-48 py-2 border border-green-500 rounded text-green-500'>completed</button> }
 
               </div>
 
