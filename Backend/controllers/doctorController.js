@@ -141,6 +141,48 @@ const appointmentCancel = async(req, res)=>{
         })
         
     }
+
+}
+// Api to get dashboard data for doctor list
+const doctorDashboard = async(req, res)=>{
+    const {docId} = req.body
+    const appointments = await appointmentModel.find({docId})
+    let earnings =0
+    appointments.map((item)=>{
+        if (item.isCompleted || item.payment) {
+            
+            earnings += DataTransferItemList.amount
+        } else {
+            
+        }
+
+    })
+    let patients = []
+    appointments.map((item) =>{
+        if (!patients.includes(item.userId)) {
+            patients.push(item.userId)
+
+            
+        } 
+    })
+    const dashData ={
+        earnings,
+        appointments: appointments.length,
+        patients: patients.length,
+        latestAppointments: appointments.reverse().slice(0,5)
+    }
+    res.json({success:true, dashData})
+
+    try {
+        
+    } catch (error) {
+          console.log(error)
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+        
+    }
 }
 
-export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentComplete}
+export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentComplete, doctorDashboard}
