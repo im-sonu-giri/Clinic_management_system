@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom'
 
 
 const Login = () => {
-  const { backendUrl, token, setToken } = useContext(AppContext)
+  const {backendUrl, token, setToken} = useContext(AppContext)
+  console.log("Backend URL:", backendUrl) 
   const navigate = useNavigate()
   const [state, setState] = useState('Sign Up')
   const [email, setEmail] = useState('')
@@ -18,45 +19,46 @@ const Login = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault()
     try {
-      if (state === 'Sign Up') {
-        const { data } = await axios.post(backendUrl + '/api/user/register', { name, password, email })
-        if (data.success) {
+      if(state === 'Sign Up'){
+        const {data} = await axios.post(backendUrl + '/api/user/register', {name, password, email} )
+        if(data.success){
           localStorage.setItem('token', data.token)
           setToken(data.token)
-          toast.success('Account created successfully!')
+          toast.success('Account created successfully! Please login.')
           setState('Login')
-        } else {
+
+        }else{
           toast.error(data.message)
         }
 
-      } else {
-        const { data } = await axios.post(backendUrl + '/api/user/login', { password, email })
-        if (data.success) {
+      }else{
+         const {data} = await axios.post(backendUrl + '/api/user/login', {password, email} )
+        if(data.success){
           localStorage.setItem('token', data.token)
           setToken(data.token)
-        } else {
+            }else{
           toast.error(data.message)
         }
 
       }
-
+      
     } catch (error) {
       toast.error(error.message)
-
+      
     }
 
   }
-  useEffect(() => {
-    if (token) {
+  useEffect(()=>{
+    if(token){
       navigate('/')
 
     }
-  }, [token])
+  },[token])
 
   return (
-    <form
-      onSubmit={onSubmitHandler}
-      className='min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4'>
+    <form 
+    onSubmit={onSubmitHandler}
+    className='min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4'>
 
       <div className='flex flex-col gap-4 m-auto items-start p-10 w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-2xl'>
 
@@ -67,23 +69,23 @@ const Login = () => {
         <p className='text-sm text-gray-500 -mt-2'>
           Please {state === 'Sign Up' ? 'sign up' : 'Log in'} to book appointments
         </p>
-        {state === 'Sign Up' &&
-          <div className='w-full'>
-            <p className='text-sm font-medium text-gray-600 mb-1'>Full Name</p>
-            <input
-              className='border border-gray-300 rounded-lg w-full p-3 mt-1 text-sm 
+        {state === 'Sign Up' && 
+        <div className='w-full'>
+          <p className='text-sm font-medium text-gray-600 mb-1'>Full Name</p>
+          <input
+            className='border border-gray-300 rounded-lg w-full p-3 mt-1 text-sm 
             focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
             hover:border-green-400 transition-all'
-              type="text"
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-              required
-            />
-          </div>
+            type="text"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            required
+          />
+        </div> 
         }
 
         {/* Full Name */}
-
+        
 
         {/* Email */}
         <div className='w-full'>
@@ -114,9 +116,9 @@ const Login = () => {
         </div>
 
         {/* Button */}
-        <button
-          type='submit'
-          className='bg-primary hover:opacity-90 active:scale-[0.99] transition-all text-white w-full py-3 rounded-lg text-base font-medium shadow-md'>
+        <button 
+        type='submit'
+        className='bg-primary hover:opacity-90 active:scale-[0.99] transition-all text-white w-full py-3 rounded-lg text-base font-medium shadow-md'>
           {state === 'Sign Up' ? 'Create account' : 'Login'}
         </button>
 
@@ -126,8 +128,8 @@ const Login = () => {
             ? (
               <p className='text-sm text-gray-600'>
                 Already have an account?{" "}
-                <span onClick={() => setState('Login')}
-                  className='text-primary font-medium cursor-pointer hover:underline'>
+                <span onClick={()=> setState('Login')}
+                className='text-primary font-medium cursor-pointer hover:underline'>
                   Login here
                 </span>
               </p>
@@ -135,8 +137,8 @@ const Login = () => {
             : (
               <p className='text-sm text-gray-600'>
                 Create an new account?{" "}
-                <span onClick={() => setState('Sign Up')}
-                  className='text-primary font-medium cursor-pointer hover:underline'>
+                <span onClick={()=> setState('Sign Up')}
+                className='text-primary font-medium cursor-pointer hover:underline'>
                   click here
                 </span>
               </p>

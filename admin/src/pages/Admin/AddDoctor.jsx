@@ -18,10 +18,8 @@ const AddDoctor = () => {
   const [address1, setAddress1] = useState('')
   const [address2, setAddress2] = useState('')
   const [about, setAbout] = useState('')
-
   // backend url form the context and get the admin url
   const { backendUrl, aToken } = useContext(AdminContext)
-
   // apicall
 
   const onSubmitHandler = async (event) => {
@@ -31,7 +29,6 @@ const AddDoctor = () => {
       if (!docImg) {
         return toast.error('Image Not Selected')
       }
-
       const formData = new FormData()
 
       formData.append('image', docImg)
@@ -42,25 +39,16 @@ const AddDoctor = () => {
       formData.append('fees', fees)
       formData.append('speciality', speciality)
       formData.append('degree', degree)
-      formData.append('address', JSON.stringify({ line1: address1, line2: address2 }))
+      formData.append('address', JSON.stringify({line1:address1, line2:address2}))
       formData.append('about', about)
 
       //console log formdata
-      formData.forEach((value, key) => {
+      formData.forEach((value,key)=>{
         console.log(`${key} :${value}`);
       })
+      const {data} = await axios.post(backendUrl + '/api/admin/add-doctor', formData, {headers: {Authorization: `Bearer ${aToken}`}})
 
-      const { data } = await axios.post(
-        backendUrl + '/api/admin/add-doctor',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${aToken}`
-          }
-        }
-      )
-
-      if (data.success) {
+      if(data.success){
         toast.success(data.message)
         setDocImg(false)
         setName('')
@@ -73,13 +61,14 @@ const AddDoctor = () => {
         setAddress1('')
         setAddress2('')
         setAbout('')
-      } else {
+      }else{
         toast.error(data.message)
       }
 
     } catch (error) {
       console.error('Form submission error:', error)
       toast.error(error.response?.data?.message || 'Failed to add doctor. Please try again.')
+
     }
   }
 
@@ -198,7 +187,7 @@ const AddDoctor = () => {
                 onChange={(e) => setSpeciality(e.target.value)}
                 className="w-full mt-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-green-400 bg-gray-50"
               >
-                <option>General Physician</option>
+                <option value="">General Physician</option>
                 <option>Cardiologist</option>
                 <option>Dermatologist</option>
                 <option>Neurologist</option>

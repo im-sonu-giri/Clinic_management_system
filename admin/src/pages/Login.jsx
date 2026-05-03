@@ -10,7 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState('')
 
     const { setAToken, backendUrl } = useContext(AdminContext)
-    const { setDToken } = useContext(DoctorContext)
+    const {setDToken} = useContext(DoctorContext)
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()
@@ -18,6 +18,9 @@ const Login = () => {
         try {
             // API block
             if (state === 'Admin') {
+                console.log('Frontend login attempt - backendUrl:', backendUrl);
+                console.log('Frontend login attempt - email:', email, 'password provided:', !!password);
+                
                 const { data } = await axios.post(
                     backendUrl + '/api/admin/login',
                     { email, password }
@@ -29,24 +32,23 @@ const Login = () => {
                 } else {
                     toast.error(data.message)
                 }
-            } else {
-                const { data } = await axios.post(
-                    backendUrl + '/api/doctor/login',
-                    { email, password }
-                )
-
-                if (data.success) {
+            }else{
+                const {data}= await axios.post(backendUrl +'/api/doctor/login', {email, password})
+                 if (data.success) {
                     setDToken(data.token)
                     localStorage.setItem("dToken", data.token)
                     console.log(data.token);
                 } else {
                     toast.error(data.message)
                 }
+                
+
             }
 
         } catch (error) {
-            console.log(error)
-            toast.error(error?.response?.data?.message || error.message)
+            console.error('Frontend login error:', error);
+            console.error('Error response:', error.response?.data);
+            toast.error(error.response?.data?.message || 'Login failed. Please check console for details.');
         }
     }
 

@@ -9,7 +9,7 @@ import axios from 'axios'
 
 const Appointment = () => {
   const { docId } = useParams()
-  const { doctors, currencySymbol, backendUrl, token,getDoctorData } = useContext(AppContext)
+  const { doctors, currencySymbol, backendUrl, token, getDoctorsData } = useContext(AppContext)
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   const navigate = useNavigate()
 
@@ -20,8 +20,10 @@ const Appointment = () => {
 
   const fetchDocInfo = () => {
     const docInfo = doctors.find(doc => doc._id === docId)
+    console.log('Found doctor info:', docInfo)
+    console.log('Available doctors:', doctors)
+    console.log('Looking for docId:', docId)
     setDocInfo(docInfo) 
-    console.log(docInfo)
   }
 
   const getAvailableSlots = async () => {
@@ -29,6 +31,8 @@ const Appointment = () => {
 
     // getting current date
     let today = new Date()
+    console.log('Generating slots for doctor:', docInfo?.name)
+    console.log('Doctor slots_booked:', docInfo?.slots_booked)
 
     for (let i = 0; i < 7; i++) {
       let currentDate = new Date(today)
@@ -61,20 +65,27 @@ const Appointment = () => {
         let month = currentDate.getMonth()+1
         let year = currentDate.getFullYear()
         const slotDate = day + "_" + month+"_" +year
-        const slotTIme = formattedTime
-        const isSlotAvailable = docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].include(slotTime) ?false:true
+        const slotTime = formattedTime
+        
+        // Check if slot is available
+        let isSlotAvailable = true
+        if (docInfo?.slots_booked && docInfo.slots_booked[slotDate]) {
+          isSlotAvailable = !docInfo.slots_booked[slotDate].includes(slotTime)
+        }
+
+        console.log(`Slot ${slotDate} ${slotTime} available:`, isSlotAvailable)
 
         if(isSlotAvailable){
-
-        timeslots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        })
-      }
+          timeslots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          })
+        }
 
         currentDate.setMinutes(currentDate.getMinutes() + 30)
       }
 
+      console.log(`Day ${i} generated ${timeslots.length} slots`)
       setDocSlots(prev => [...prev, timeslots])
     }
   }
@@ -84,10 +95,27 @@ const Appointment = () => {
       return navigate('/login')
 
     }
+    
+    // Validate docSlots and slotIndex
+    if (!docSlots || docSlots.length === 0) {
+      toast.error('No available slots found')
+      return
+    }
+    
+    if (!docSlots[slotIndex] || docSlots[slotIndex].length === 0) {
+      toast.error('No slots available for selected day')
+      return
+    }
+    
+    if (!slotTime) {
+      toast.error('Please select a time slot')
+      return
+    }
+    
     try {
       const date = docSlots[slotIndex][0].datetime
       let day= date.getDate()
-      let month = date.getmonth()+1 
+      let month = date.getMonth()+1 
       let year = date.getFullYear()
 
       const slotDate = day + "_" + month+"_" +year
@@ -95,7 +123,7 @@ const Appointment = () => {
       if(data.success){
 
         toast.success(data.message)
-        getDoctorData()
+        getDoctorsData()
         navigate('/my-appointments')
       }
       else{
@@ -178,17 +206,17 @@ const Appointment = () => {
               className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? 'bg-primary text-white' : 'border border-gray-200 text-gray-700'}`}
               key={index}>
               <p>
-                {item[0] && daysOfWeek?.[item[0].datetime.getDay()]}
+                {item && item[0] && daysOfWeek?.[item[0].datetime.getDay()]}
               </p>
 
               <p>
-                {item[0] && item[0].datetime.getDate()}
+                {item && item[0] && item[0].datetime.getDate()}
               </p>
             </div>
           ))}
         </div>
         <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
-          {docSlots.length > 0 && docSlots[slotIndex].map((item, index) => (
+          {docSlots.length > 0 && docSlots[slotIndex] && docSlots[slotIndex].map((item, index) => (
             <p
               onClick={() => setSlotTime(item.time)} 
               className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer

@@ -5,18 +5,6 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const MyProfile = () => {
-  // const [userData, setUserData] = useState({
-  //   name: "Sonu giri",
-  //   Image: assets.profile_pic,
-  //   email: 'sonu@gmail.com',
-  //   phone: '9812345676',
-  //   address: {
-  //     line1: 'amarawoti marga',
-  //     line2: 'koteshwor,kathmandu',
-  //   },
-  //   gender: 'female',
-  //   dob: '2003-06-08'
-  // })
   const { userData, setUserData, token, backendUrl, loadUserProfileData } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
@@ -72,7 +60,7 @@ const MyProfile = () => {
         </label>
           : <img
             className='w-36 h-36 object-cover rounded-full border-4 border-gray-100 shadow-sm'
-            src={userData.Image}
+            src={userData.image}
             alt=""
           />
       }

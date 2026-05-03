@@ -47,6 +47,17 @@ const AppContextProvider = (props) => {
         }
     }
 
+    const slotDateFormat = (slotDate) => {
+        const [day, month, year] = slotDate.split('_')
+        const date = new Date(year, month - 1, day)
+        return date.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            day: 'numeric', 
+            month: 'short', 
+            year: 'numeric' 
+        })
+    }
+
     const value = {
         doctors,getDoctorsData,
         currencySymbol,
@@ -55,7 +66,8 @@ const AppContextProvider = (props) => {
         backendUrl,
         userData,
         setUserData,
-        loadUserProfileData
+        loadUserProfileData,
+        slotDateFormat
     }
 
     useEffect(() => {
