@@ -12,7 +12,7 @@ const DoctorDashboard = () => {
   useEffect(() => {
     if (dToken) {
       getDashData()
-      console.log(DataTransfer.dashData);
+      console.log(dashData);
     }
 
   }, [dToken])
@@ -56,7 +56,7 @@ const DoctorDashboard = () => {
         </div>
         <div className='pt-4 border border-t-0'>
           {
-            dashData.latestAppointments.map((item, index) => {
+            dashData.latestAppointments.map((item, index) => (
               <div className='flex items-center px-6 py-3 gap-3 hover:bg-gray-100' key={index}>
                 <img
                   className='rounded-full w-10'
@@ -79,7 +79,7 @@ const DoctorDashboard = () => {
                 }
 
               </div>
-            })
+            ))
           }
 
         </div>
