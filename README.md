@@ -10,6 +10,16 @@ A comprehensive full-stack Clinic Management System built to streamline healthca
 ### Admin Panel
 👉 https://clinic-management-system-3.onrender.com
 
+## 🔐 Admin Login Credentials
+
+Use the following credentials to access the admin panel:
+
+### 🛠️ Admin Access
+
+- 📧 Email: `admin@gmail.com`  
+- 🔑 Password: `admin@123`
+
+
 ## 🌟 Features
 
 ### Admin Panel
@@ -251,44 +261,4 @@ npm run lint
 npm run format
 ```
 
-## 📈 Performance Optimizations
 
-- **Database Indexing**: Optimized query performance
-- **Image Optimization**: Cloudinary auto-optimization
-- **Code Splitting**: Lazy loading for better performance
-- **Caching**: Response caching where appropriate
-- **Compression**: Gzip compression for API responses
-- **Minification**: Production build optimization
-
-## 🐛 Bug Fixes & Improvements
-
-### Recent Fixes
-- ✅ Fixed sidebar layout issues
-- ✅ Enhanced form validation
-- ✅ Improved error handling
-- ✅ Added loading states
-- ✅ Fixed API authentication
-- ✅ Enhanced security measures
-- ✅ Professional UI improvements
-
-### Known Issues
-- None currently reported
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Code Style Guidelines
-- Use ES6+ syntax
-- Follow React best practices
-- Write meaningful commit messages
-- Add comments for complex logic
-- Maintain consistent code formatting
-
-
-
-**Built with ❤️ for better healthcare management**
