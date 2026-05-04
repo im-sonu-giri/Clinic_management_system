@@ -2,6 +2,14 @@
 
 A comprehensive full-stack Clinic Management System built to streamline healthcare operations, including patient management, appointment scheduling, doctor management, and administrative dashboards. Designed with a modern UI and scalable backend for real-world healthcare environments.
 
+## 🚀 Live Demo
+
+### Frontend (User Application)
+👉 https://clinic-management-system-frontend-4d6p.onrender.com
+
+### Admin Panel
+👉 https://clinic-management-system-3.onrender.com
+
 ## 🌟 Features
 
 ### Admin Panel
