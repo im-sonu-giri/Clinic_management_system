@@ -88,7 +88,7 @@ const Doctors = () => {
 
                 <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50">
                   <img
-                    className='w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110'
+                    className='w-full h-56 object-contain transition-transform duration-500 group-hover:scale-110'
                     src={item.image}
                     alt={item.name}
                   />
