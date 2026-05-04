@@ -15,7 +15,7 @@ const AdminContextProvider = (props) => {
     const [dashData, setDashData] = useState(false)
 
     // backend URL from env
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = "https://clinic-management-system-server-j1q1.onrender.com"
     const getAllDoctors = async()=>{
         try {
             const {data} = await axios.get(backendUrl + '/api/admin/all-doctors', {headers: {Authorization: `Bearer ${aToken}`}})
